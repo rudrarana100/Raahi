@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, ShieldAlert, Lock, AlertTriangle, Eye, RefreshCw, Building } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Lock, AlertTriangle, Eye, Building } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export default function AdminDashboard() {
@@ -19,7 +19,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // Mock list of organizational active trips for hostel/campus monitoring demo
+  // Organizational active trips for hostel/campus monitoring demo
   const orgTrips = [
     ...(activeTrip ? [{
       tripId: activeTrip.tripId,
@@ -66,31 +66,31 @@ export default function AdminDashboard() {
   if (!isAuthenticated) {
     return (
       <div className="max-w-md mx-auto py-12 px-4">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="bg-primary text-white p-6 text-center">
-            <div className="w-12 h-12 rounded-xl bg-indigo-900 border border-indigo-700 flex items-center justify-center mx-auto mb-2">
-              <Lock className="w-6 h-6 text-indigo-200" />
+        <div className="bg-sage text-parchment rounded-[9px] border border-forest/20 shadow-xl overflow-hidden">
+          <div className="bg-forest text-white p-6 text-center">
+            <div className="w-12 h-12 rounded-[6px] bg-sage border border-parchment/20 flex items-center justify-center mx-auto mb-2">
+              <Lock className="w-6 h-6 text-vivid" />
             </div>
-            <h2 className="text-2xl font-serif">Institutional Security Portal</h2>
-            <p className="text-xs text-indigo-200 mt-1">Gated admin view for campus and hostel wardens</p>
+            <h2 className="text-2xl font-bold">Institutional Security Portal</h2>
+            <p className="text-xs font-mono text-parchment/80 mt-1">Gated admin view for campus and hostel wardens</p>
           </div>
 
           <form onSubmit={handleLogin} className="p-6 space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Enter Admin PIN</label>
+              <label className="block text-xs font-mono font-medium text-parchment/90 mb-1">Enter Admin PIN</label>
               <input
                 type="password"
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="PIN (Demo PIN: 1234)"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-900"
+                className="w-full px-3.5 py-2.5 rounded-[6px] border border-parchment/20 text-sm focus:outline-none focus:ring-1 focus:ring-vivid bg-white text-forest font-mono"
               />
-              {errorMsg && <p className="text-xs text-alert font-medium mt-1">{errorMsg}</p>}
+              {errorMsg && <p className="text-xs font-mono text-coral font-medium mt-1">{errorMsg}</p>}
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 bg-primary hover:bg-primary-light text-white font-medium text-xs rounded-lg transition-colors"
+              className="w-full py-3 bg-vivid hover:bg-botanical text-forest font-semibold text-xs rounded-[6px] transition-colors"
             >
               Authenticate Admin Session
             </button>
@@ -101,22 +101,22 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-6 px-4 space-y-6">
+    <div className="max-w-[1200px] mx-auto py-8 px-4 sm:px-6 space-y-6">
       
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      <div className="flex items-center justify-between border-b border-forest/10 pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center">
+          <div className="w-10 h-10 rounded-[6px] bg-forest text-parchment flex items-center justify-center">
             <Building className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-2xl font-serif text-slate-900">Campus & Hostel Security Monitoring</h2>
-            <p className="text-xs text-slate-500">Live anonymized commute tracking across institutional residents</p>
+            <h2 className="text-2xl font-bold text-forest">Campus & Hostel Security Roster</h2>
+            <p className="text-xs font-mono text-moss tracking-mono">Live anonymized commute tracking across institutional residents</p>
           </div>
         </div>
         <button
           onClick={() => setIsAuthenticated(false)}
-          className="text-xs font-medium text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200"
+          className="text-xs font-mono tracking-mono text-moss hover:text-forest px-3 py-1.5 rounded-[6px] border border-forest/10"
         >
           Lock Admin
         </button>
@@ -124,39 +124,39 @@ export default function AdminDashboard() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Active Commutes</span>
-          <span className="text-3xl font-serif text-slate-900 font-bold mt-1 block">
+        <div className="bg-card p-5 rounded-[9px] border border-forest/10 shadow-sm">
+          <span className="text-[11px] font-mono font-bold text-moss uppercase tracking-mono block">Active Commutes</span>
+          <span className="text-3xl font-mono text-forest font-bold mt-1 block">
             {orgTrips.filter(t => t.status === 'active').length}
           </span>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider block">High Risk / Flagged</span>
-          <span className="text-3xl font-serif text-amber-700 font-bold mt-1 block">
+        <div className="bg-card p-5 rounded-[9px] border border-forest/10 shadow-sm">
+          <span className="text-[11px] font-mono font-bold text-amber-700 uppercase tracking-mono block">High Risk / Flagged</span>
+          <span className="text-3xl font-mono text-amber-800 font-bold mt-1 block">
             {orgTrips.filter(t => t.riskScore > 50 || t.status === 'alerted').length}
           </span>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[11px] font-bold text-red-600 uppercase tracking-wider block font-sans">Active Security Alerts</span>
-          <span className="text-3xl font-serif text-red-700 font-bold mt-1 block">
+        <div className="bg-card p-5 rounded-[9px] border border-forest/10 shadow-sm">
+          <span className="text-[11px] font-mono font-bold text-alert uppercase tracking-mono block">Active Incident Alerts</span>
+          <span className="text-3xl font-mono text-alert font-bold mt-1 block">
             {orgTrips.filter(t => t.status === 'alerted').length}
           </span>
         </div>
       </div>
 
       {/* Active Trips Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden space-y-3">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="font-serif text-lg font-medium text-slate-900">Institutional Residents Commute Roster</h3>
-          <span className="text-xs text-slate-400">Anonymized for Privacy</span>
+      <div className="bg-white rounded-[9px] border border-forest/10 shadow-sm overflow-hidden space-y-3">
+        <div className="p-4 border-b border-forest/10 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-forest">Institutional Residents Commute Roster</h3>
+          <span className="text-xs font-mono text-moss">Anonymized for Privacy</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+              <tr className="bg-parchment border-b border-forest/10 text-forest font-mono font-bold uppercase tracking-mono">
                 <th className="py-3 px-4">Resident</th>
                 <th className="py-3 px-4">Mode</th>
                 <th className="py-3 px-4">Route</th>
@@ -165,40 +165,40 @@ export default function AdminDashboard() {
                 <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-forest/5">
               {orgTrips.map((trip) => (
-                <tr key={trip.tripId} className={`hover:bg-slate-50/80 transition-colors ${
-                  trip.status === 'alerted' ? 'bg-red-50/50' : ''
+                <tr key={trip.tripId} className={`hover:bg-parchment/60 transition-colors ${
+                  trip.status === 'alerted' ? 'bg-wine/10' : ''
                 }`}>
-                  <td className="py-3 px-4 font-bold text-slate-900">{trip.initials}</td>
-                  <td className="py-3 px-4 uppercase text-[11px] font-mono text-slate-700">{trip.mode}</td>
-                  <td className="py-3 px-4 text-slate-800">{trip.startName} → {trip.destName}</td>
-                  <td className="py-3 px-4">
-                    <span className={`px-2 py-0.5 rounded font-mono font-bold text-[11px] ${
+                  <td className="py-3.5 px-4 font-bold font-mono text-forest">{trip.initials}</td>
+                  <td className="py-3.5 px-4 uppercase text-[11px] font-mono text-moss">{trip.mode}</td>
+                  <td className="py-3.5 px-4 text-forest font-medium">{trip.startName} → {trip.destName}</td>
+                  <td className="py-3.5 px-4">
+                    <span className={`px-2.5 py-0.5 rounded-[6px] font-mono font-bold text-[11px] ${
                       trip.riskScore > 50
-                        ? 'bg-amber-100 text-amber-900 border border-amber-300'
-                        : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                        ? 'bg-amber-50 text-amber-900 border border-amber-300'
+                        : 'bg-parchment text-forest border border-forest/10'
                     }`}>
                       {trip.riskScore}/100
                     </span>
                   </td>
-                  <td className="py-3 px-4">
-                    <span className={`px-2 py-0.5 rounded font-bold text-[10px] uppercase tracking-wide ${
+                  <td className="py-3.5 px-4">
+                    <span className={`px-2 py-0.5 rounded-[6px] font-mono font-bold text-[10px] uppercase tracking-mono ${
                       trip.status === 'alerted'
-                        ? 'bg-red-600 text-white animate-pulse'
+                        ? 'bg-alert text-white animate-pulse'
                         : trip.status === 'active'
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-200 text-slate-700'
+                        ? 'bg-vivid text-forest'
+                        : 'bg-card text-moss'
                     }`}>
                       {trip.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right">
+                  <td className="py-3.5 px-4 text-right">
                     <button
                       onClick={() => alert(`Viewing live monitor telemetry for resident ${trip.initials}`)}
-                      className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-medium text-[11px] border border-slate-200 inline-flex items-center space-x-1"
+                      className="px-2.5 py-1 bg-white hover:bg-parchment text-forest rounded-[6px] font-mono font-medium text-[11px] border border-forest/10 inline-flex items-center space-x-1"
                     >
-                      <Eye className="w-3 h-3 text-slate-500" />
+                      <Eye className="w-3 h-3 text-moss" />
                       <span>Inspect</span>
                     </button>
                   </td>

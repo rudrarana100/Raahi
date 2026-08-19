@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/Navbar';
 import Onboarding from './pages/Onboarding';
@@ -9,92 +10,70 @@ import AlertConfirmation from './pages/AlertConfirmation';
 import ContactsManager from './pages/ContactsManager';
 import AdminDashboard from './pages/AdminDashboard';
 
-function MainApp() {
+function NavigationGuard() {
   const { user, activeTrip, activeAlert } = useApp();
-  const [currentRoute, setCurrentRoute] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Route routing logic
   useEffect(() => {
-    // If URL contains alert-sent or alert is active, show alert screen
-    if (window.location.pathname.includes('/alert-sent') || activeAlert) {
-      setCurrentRoute('alert-sent');
+    // 1. Force onboarding if profile is unconfigured
+    if ((!user || !user.name) && location.pathname !== '/onboarding') {
+      navigate('/onboarding');
       return;
     }
 
-    // If URL is /admin, show admin view
-    if (window.location.pathname.includes('/admin')) {
-      setCurrentRoute('admin');
+    // 2. Redirect to alert-sent if active alert exists
+    if (activeAlert && location.pathname !== '/alert-sent') {
+      navigate('/alert-sent');
       return;
     }
+  }, [user, activeTrip, activeAlert, location.pathname, navigate]);
 
-    // If no user profile exists, force onboarding
-    if (!user || !user.name) {
-      setCurrentRoute('onboarding');
-      return;
-    }
+  return null;
+}
 
-    // If trip is currently active, open active trip screen
-    if (activeTrip && (activeTrip.status === 'active' || activeTrip.status === 'alerted')) {
-      setCurrentRoute('active');
-    }
-  }, [user, activeTrip, activeAlert]);
+function MainLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleNavigate = (route) => {
-    setCurrentRoute(route);
-  };
+  const isHideNavbar = location.pathname === '/onboarding';
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-indigo-900 selection:text-white">
-      {currentRoute !== 'onboarding' && (
-        <Navbar currentRoute={currentRoute} onNavigate={handleNavigate} />
+    <div className="min-h-screen flex flex-col bg-white text-forest selection:bg-vivid selection:text-forest">
+      <NavigationGuard />
+
+      {!isHideNavbar && (
+        <Navbar
+          currentRoute={location.pathname.replace('/', '') || 'home'}
+          onNavigate={(route) => {
+            if (route === 'home') navigate('/');
+            else navigate(`/${route}`);
+          }}
+        />
       )}
 
       <main className="flex-1">
-        {currentRoute === 'onboarding' && (
-          <Onboarding onComplete={() => setCurrentRoute('home')} />
-        )}
-
-        {currentRoute === 'home' && (
-          <Home onNavigate={handleNavigate} />
-        )}
-
-        {currentRoute === 'start-trip' && (
-          <StartTrip
-            onTripStarted={() => setCurrentRoute('active')}
-            onBack={() => setCurrentRoute('home')}
-          />
-        )}
-
-        {currentRoute === 'active' && (
-          <ActiveTrip
-            onTripEnded={() => setCurrentRoute('home')}
-            onAlertTriggered={() => setCurrentRoute('alert-sent')}
-          />
-        )}
-
-        {currentRoute === 'alert-sent' && (
-          <AlertConfirmation onReturnHome={() => setCurrentRoute('home')} />
-        )}
-
-        {currentRoute === 'contacts' && (
-          <ContactsManager onBack={() => setCurrentRoute('home')} />
-        )}
-
-        {currentRoute === 'admin' && (
-          <AdminDashboard />
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/start-trip" element={<StartTrip />} />
+          <Route path="/active-trip" element={<ActiveTrip />} />
+          <Route path="/alert-sent" element={<AlertConfirmation />} />
+          <Route path="/contacts" element={<ContactsManager />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
       </main>
 
       {/* Reassuring Footer */}
-      <footer className="py-4 text-center border-t border-slate-200 text-xs text-slate-500 bg-white">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="font-medium">Raahi AI Safety Companion. Built for live hackathon execution.</p>
+      <footer className="py-4 text-center border-t border-forest/10 text-xs font-mono text-moss bg-white">
+        <div className="max-w-[1200px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="font-medium font-sans">Raahi AI Safety Companion.</p>
           <div className="flex items-center space-x-3 text-[11px]">
-            <button onClick={() => setCurrentRoute('admin')} className="hover:underline text-slate-600">
+            <button onClick={() => navigate('/admin')} className="hover:underline text-forest font-mono">
               Institutional Admin
             </button>
             <span>•</span>
-            <button onClick={() => setCurrentRoute('contacts')} className="hover:underline text-slate-600">
+            <button onClick={() => navigate('/contacts')} className="hover:underline text-forest font-mono">
               Emergency Contacts
             </button>
           </div>
@@ -107,7 +86,9 @@ function MainApp() {
 export default function App() {
   return (
     <AppProvider>
-      <MainApp />
+      <BrowserRouter>
+        <MainLayout />
+      </BrowserRouter>
     </AppProvider>
   );
 }

@@ -53,11 +53,11 @@ export default function MapContainer({ startLocation, destination, currentLocati
     const bounds = [];
 
     // Custom Icon Creators
-    const createCustomIcon = (color, label) => L.divIcon({
+    const createCustomIcon = (bgColor, textColor, label) => L.divIcon({
       className: 'custom-map-icon',
       html: `
         <div style="
-          background-color: ${color};
+          background-color: ${bgColor};
           width: 28px;
           height: 28px;
           border-radius: 50%;
@@ -66,9 +66,10 @@ export default function MapContainer({ startLocation, destination, currentLocati
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
+          color: ${textColor};
           font-weight: bold;
           font-size: 11px;
+          font-family: 'JetBrains Mono', monospace;
         ">${label}</div>
       `,
       iconSize: [28, 28],
@@ -78,7 +79,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
     // Start Location Marker
     if (startLocation && startLocation.lat && startLocation.lng) {
       const startMarker = L.marker([startLocation.lat, startLocation.lng], {
-        icon: createCustomIcon('#312e81', 'A')
+        icon: createCustomIcon('#0a2414', '#f3fbe9', 'A')
       }).addTo(map);
       startMarker.bindPopup(`<b>Start:</b> ${startLocation.name || 'Start position'}`);
       markersRef.current.push(startMarker);
@@ -88,7 +89,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
     // Destination Marker
     if (destination && destination.lat && destination.lng) {
       const destMarker = L.marker([destination.lat, destination.lng], {
-        icon: createCustomIcon('#059669', 'B')
+        icon: createCustomIcon('#17b267', '#ffffff', 'B')
       }).addTo(map);
       destMarker.bindPopup(`<b>Destination:</b> ${destination.name || 'Target'}`);
       markersRef.current.push(destMarker);
@@ -99,10 +100,10 @@ export default function MapContainer({ startLocation, destination, currentLocati
     if (polyline && polyline.length > 0) {
       const latLngs = polyline.map(pt => [pt.lat, pt.lng]);
       const poly = L.polyline(latLngs, {
-        color: '#4338ca',
+        color: '#0a2414',
         weight: 5,
-        opacity: 0.8,
-        dashArray: '8, 8'
+        opacity: 0.85,
+        dashArray: '6, 6'
       }).addTo(map);
       polylineRef.current = poly;
     }
@@ -113,11 +114,11 @@ export default function MapContainer({ startLocation, destination, currentLocati
         className: 'custom-live-icon',
         html: `
           <div class="marker-pulse" style="
-            background-color: #1e1b4b;
+            background-color: #1ad379;
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            border: 3px solid #ffffff;
+            border: 3px solid #0a2414;
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
           "></div>
         `,
@@ -126,7 +127,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
       });
 
       const liveMarker = L.marker([currentLocation.lat, currentLocation.lng], { icon: liveIcon }).addTo(map);
-      liveMarker.bindPopup(`<b>Current Location</b><br/>Updated just now`);
+      liveMarker.bindPopup(`<b>Current Location</b><br/>Updated live`);
       markersRef.current.push(liveMarker);
       bounds.push([currentLocation.lat, currentLocation.lng]);
     }
@@ -140,33 +141,33 @@ export default function MapContainer({ startLocation, destination, currentLocati
   }, [startLocation, destination, currentLocation, polyline]);
 
   return (
-    <div className="relative w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+    <div className="relative w-full h-80 sm:h-96 rounded-[9px] overflow-hidden border border-forest/10 shadow-sm bg-card">
       <div ref={mapRef} className="w-full h-full" />
 
       {/* Map Legend Overlay */}
-      <div className="absolute top-3 right-3 z-[1000] bg-white/90 backdrop-blur px-3 py-2 rounded-lg border border-slate-200 shadow-sm text-xs space-y-1">
+      <div className="absolute top-3 right-3 z-[1000] bg-white/90 backdrop-blur px-3 py-2 rounded-[6px] border border-forest/10 shadow-sm text-xs font-mono space-y-1">
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded-full bg-indigo-900 border border-white"></span>
-          <span className="text-slate-700 font-medium">Start</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-forest border border-white"></span>
+          <span className="text-forest font-semibold">Start (A)</span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded-full bg-emerald-600 border border-white"></span>
-          <span className="text-slate-700 font-medium">Destination</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-botanical border border-white"></span>
+          <span className="text-forest font-semibold">Destination (B)</span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded-full bg-indigo-950 border border-white"></span>
-          <span className="text-slate-700 font-medium">Current Position</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-vivid border border-forest"></span>
+          <span className="text-forest font-semibold">Live Position</span>
         </div>
       </div>
 
       {/* Interactive Location Simulation Controls for Live Demo */}
       {(onSimulateMove || onSimulateDeviation) && (
-        <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 backdrop-blur px-3 py-2 rounded-lg border border-slate-200 shadow-md text-xs flex items-center space-x-2">
-          <span className="text-slate-500 font-medium">Demo Simulator:</span>
+        <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 backdrop-blur px-3 py-2 rounded-[6px] border border-forest/10 shadow-md text-xs font-mono flex items-center space-x-2">
+          <span className="text-moss font-medium">Demo Simulator:</span>
           {onSimulateMove && (
             <button
               onClick={onSimulateMove}
-              className="px-2.5 py-1 bg-indigo-50 text-indigo-900 border border-indigo-200 rounded hover:bg-indigo-100 font-medium transition-colors"
+              className="px-2.5 py-1 bg-parchment text-forest border border-forest/10 rounded-[6px] hover:bg-card font-medium transition-colors"
             >
               Advance Step
             </button>
@@ -174,7 +175,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
           {onSimulateDeviation && (
             <button
               onClick={onSimulateDeviation}
-              className="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-200 rounded hover:bg-amber-100 font-medium transition-colors"
+              className="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-[6px] hover:bg-amber-100 font-medium transition-colors"
             >
               Simulate 200m Deviation
             </button>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Shield, Plus, Trash2, ArrowRight, UserCheck, PhoneCall } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
-export default function Onboarding({ onComplete }) {
+export default function Onboarding() {
+  const navigate = useNavigate();
   const { saveUser, saveContacts } = useApp();
 
   const [name, setName] = useState('');
@@ -48,71 +50,71 @@ export default function Onboarding({ onComplete }) {
     saveUser({ name, phone, emergencyPin });
     saveContacts(validContacts);
 
-    if (onComplete) onComplete();
+    navigate('/');
   };
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-[9px] border border-forest/10 shadow-xl overflow-hidden">
         
         {/* Header */}
-        <div className="bg-primary text-white p-6 text-center">
-          <div className="w-12 h-12 rounded-xl bg-indigo-900 border border-indigo-700 flex items-center justify-center mx-auto mb-3">
-            <Shield className="w-6 h-6 text-indigo-200" />
+        <div className="bg-parchment text-forest p-6 text-center border-b border-forest/10">
+          <div className="w-12 h-12 rounded-[6px] bg-vivid border border-forest/10 flex items-center justify-center mx-auto mb-3">
+            <Shield className="w-6 h-6 text-forest stroke-[2.5]" />
           </div>
-          <h2 className="text-3xl font-serif tracking-tight">Setup Raahi</h2>
-          <p className="text-xs text-indigo-200 mt-1">Your AI safety companion. Setup takes less than a minute.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-forest">Setup Raahi</h2>
+          <p className="text-xs font-mono text-moss tracking-mono mt-1">Your AI safety companion. Setup takes less than a minute.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           
           {/* Section 1: User Profile */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-1.5">
-              <UserCheck className="w-4 h-4 text-primary" />
+            <div className="flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-mono text-moss border-b border-forest/10 pb-1.5">
+              <UserCheck className="w-4 h-4 text-forest" />
               <span>Personal Info</span>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Your Full Name</label>
+              <label className="block text-xs font-mono font-medium text-forest mb-1">Your Full Name</label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Ananya Roy"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-900"
+                className="w-full px-3.5 py-2.5 rounded-[6px] border border-forest/10 text-sm focus:outline-none focus:ring-1 focus:ring-botanical text-forest bg-white font-sans"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Phone Number</label>
+              <label className="block text-xs font-mono font-medium text-forest mb-1">Phone Number</label>
               <input
                 type="tel"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="e.g. +91 98765 43210"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-900"
+                className="w-full px-3.5 py-2.5 rounded-[6px] border border-forest/10 text-sm focus:outline-none focus:ring-1 focus:ring-botanical text-forest bg-white font-sans"
               />
             </div>
           </div>
 
           {/* Section 2: Emergency Contacts */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-              <div className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                <PhoneCall className="w-4 h-4 text-primary" />
-                <span>Trusted Emergency Contacts</span>
+            <div className="flex items-center justify-between border-b border-forest/10 pb-1.5">
+              <div className="flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-mono text-moss">
+                <PhoneCall className="w-4 h-4 text-forest" />
+                <span>Emergency Contacts</span>
               </div>
-              <span className="text-[10px] text-slate-400">Priority order (1 = first alerted)</span>
+              <span className="text-[10px] font-mono text-moss">Priority order (1 = first alerted)</span>
             </div>
 
             {contacts.map((contact, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
-                <div className="flex items-center justify-between text-xs font-medium text-slate-700">
+              <div key={idx} className="p-3.5 rounded-[6px] border border-forest/10 bg-card space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-mono font-medium text-forest">
                   <span className="flex items-center space-x-1.5">
-                    <span className="w-5 h-5 rounded-full bg-primary text-white text-[10px] flex items-center justify-center font-bold">
+                    <span className="w-5 h-5 rounded-full bg-forest text-parchment text-[10px] flex items-center justify-center font-bold">
                       {idx + 1}
                     </span>
                     <span>Priority Contact {idx + 1}</span>
@@ -121,7 +123,7 @@ export default function Onboarding({ onComplete }) {
                     <button
                       type="button"
                       onClick={() => handleRemoveContact(idx)}
-                      className="text-slate-400 hover:text-alert text-xs"
+                      className="text-moss hover:text-alert text-xs"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -135,7 +137,7 @@ export default function Onboarding({ onComplete }) {
                     value={contact.name}
                     onChange={(e) => handleContactChange(idx, 'name', e.target.value)}
                     placeholder="Contact Name"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-primary bg-white text-slate-900"
+                    className="w-full px-3 py-2 rounded-[6px] border border-forest/10 text-xs focus:outline-none focus:ring-1 focus:ring-botanical bg-white text-forest font-sans"
                   />
                   <input
                     type="tel"
@@ -143,7 +145,7 @@ export default function Onboarding({ onComplete }) {
                     value={contact.phone}
                     onChange={(e) => handleContactChange(idx, 'phone', e.target.value)}
                     placeholder="Phone (+91...)"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-primary bg-white text-slate-900"
+                    className="w-full px-3 py-2 rounded-[6px] border border-forest/10 text-xs focus:outline-none focus:ring-1 focus:ring-botanical bg-white text-forest font-mono"
                   />
                 </div>
 
@@ -152,7 +154,7 @@ export default function Onboarding({ onComplete }) {
                   value={contact.relationship}
                   onChange={(e) => handleContactChange(idx, 'relationship', e.target.value)}
                   placeholder="Relationship (e.g. Parent, Warden, Friend)"
-                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-[11px] focus:outline-none focus:ring-1 focus:ring-primary bg-white text-slate-700"
+                  className="w-full px-3 py-1.5 rounded-[6px] border border-forest/10 text-[11px] focus:outline-none focus:ring-1 focus:ring-botanical bg-white text-forest font-sans"
                 />
               </div>
             ))}
@@ -161,9 +163,9 @@ export default function Onboarding({ onComplete }) {
               <button
                 type="button"
                 onClick={handleAddContact}
-                className="w-full py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 flex items-center justify-center space-x-1.5 transition-colors"
+                className="w-full py-2 bg-parchment hover:bg-card border border-forest/10 rounded-[6px] text-xs font-mono font-medium text-forest flex items-center justify-center space-x-1.5 transition-colors"
               >
-                <Plus className="w-3.5 h-3.5 text-slate-600" />
+                <Plus className="w-3.5 h-3.5 text-forest" />
                 <span>Add Another Contact</span>
               </button>
             )}
@@ -171,10 +173,10 @@ export default function Onboarding({ onComplete }) {
 
           <button
             type="submit"
-            className="w-full py-3 bg-primary hover:bg-primary-light text-white font-medium text-sm rounded-lg transition-colors shadow-sm flex items-center justify-center space-x-2"
+            className="w-full py-3 bg-vivid hover:bg-botanical text-forest font-semibold text-sm rounded-[6px] transition-colors shadow-sm flex items-center justify-center space-x-2"
           >
             <span>Complete Setup</span>
-            <ArrowRight className="w-4 h-4 text-indigo-300" />
+            <ArrowRight className="w-4 h-4 text-forest stroke-[2.5]" />
           </button>
 
         </form>

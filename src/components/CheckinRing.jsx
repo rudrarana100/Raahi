@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Clock, ShieldCheck } from 'lucide-react';
 
 export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire }) {
   const [secondsRemaining, setSecondsRemaining] = useState(totalSeconds);
@@ -40,7 +40,7 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
             cx="80"
             cy="80"
             r={radius}
-            stroke="#e2e8f0"
+            stroke="#f3fbe9"
             strokeWidth="8"
             fill="transparent"
           />
@@ -48,7 +48,7 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
             cx="80"
             cy="80"
             r={radius}
-            stroke={secondsRemaining < 60 ? '#dc2626' : '#312e81'}
+            stroke={secondsRemaining < 60 ? '#dc2626' : '#0a2414'}
             strokeWidth="8"
             fill="transparent"
             strokeDasharray={circumference}
@@ -60,11 +60,11 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
 
         {/* Center Content */}
         <div className="absolute flex flex-col items-center justify-center text-center">
-          <Clock className={`w-5 h-5 mb-1 ${secondsRemaining < 60 ? 'text-alert' : 'text-primary'}`} />
-          <span className="text-2xl font-bold tracking-tight text-slate-900 font-mono">
+          <Clock className={`w-5 h-5 mb-1 ${secondsRemaining < 60 ? 'text-alert' : 'text-forest'}`} />
+          <span className="text-2xl font-bold tracking-mono text-forest font-mono">
             {timeFormatted}
           </span>
-          <span className="text-[10px] text-slate-500 font-medium tracking-wide uppercase mt-0.5">
+          <span className="text-[10px] text-moss font-mono tracking-mono uppercase mt-0.5">
             Until Check-in
           </span>
         </div>
@@ -73,9 +73,9 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
       {/* Reassuring Action Button */}
       <button
         onClick={onCheckin}
-        className="mt-3 px-6 py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-primary-light transition-all shadow-sm flex items-center space-x-2"
+        className="mt-3 px-6 py-2.5 bg-vivid hover:bg-botanical text-forest rounded-[6px] font-semibold text-sm transition-all shadow-sm flex items-center space-x-2"
       >
-        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+        <ShieldCheck className="w-4 h-4 text-forest stroke-[2.5]" />
         <span>I am safe</span>
       </button>
     </div>
