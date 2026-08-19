@@ -48,7 +48,13 @@ Return ONLY raw JSON, no markdown formatting or backticks.`;
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       const result = await model.generateContent(prompt);
       const responseText = result.response.text ? result.response.text() : '';
-      const cleanJson = responseText.replace(/```json|```/g, '').trim();
+      
+      // Robust cleaning to strip any markdown code block artifacts
+      const cleanJson = responseText
+        .replace(/```json/gi, '')
+        .replace(/```/g, '')
+        .trim();
+        
       const parsed = JSON.parse(cleanJson);
       
       return {
@@ -122,7 +128,12 @@ Return ONLY raw JSON, no markdown formatting or backticks.`;
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       const result = await model.generateContent(prompt);
       const responseText = result.response.text ? result.response.text() : '';
-      const cleanJson = responseText.replace(/```json|```/g, '').trim();
+      
+      const cleanJson = responseText
+        .replace(/```json/gi, '')
+        .replace(/```/g, '')
+        .trim();
+        
       const parsed = JSON.parse(cleanJson);
       
       return {

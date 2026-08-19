@@ -19,19 +19,27 @@ export function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
 
 /**
  * Calculates perpendicular/closest distance from a point to a line segment
+ * with accurate metric projection using latitude scaling.
  */
 function distanceToSegment(p, v, w) {
   const l2 = calculateHaversineDistance(v.lat, v.lng, w.lat, w.lng);
   if (l2 === 0) return calculateHaversineDistance(p.lat, p.lng, v.lat, v.lng);
   
-  // Approximate metric projection
-  const dx = w.lng - v.lng;
+  // Use average latitude to scale longitude degree differences into meters/equivalent scale
+  const avgLatRad = ((v.lat + w.lat) / 2) * (Math.PI / 180);
+  const cosLat = Math.cos(avgLatRad);
+
+  const dx = (w.lng - v.lng) * cosLat;
   const dy = w.lat - v.lat;
-  let t = ((p.lng - v.lng) * dx + (p.lat - v.lat) * dy) / (dx * dx + dy * dy);
+  
+  const pdx = (p.lng - v.lng) * cosLat;
+  const pdy = p.lat - v.lat;
+
+  let t = (pdx * dx + pdy * dy) / (dx * dx + dy * dy);
   t = Math.max(0, Math.min(1, t));
 
-  const projLat = v.lat + t * dy;
-  const projLng = v.lng + t * dx;
+  const projLat = v.lat + t * (w.lat - v.lat);
+  const projLng = v.lng + t * (w.lng - v.lng);
 
   return calculateHaversineDistance(p.lat, p.lng, projLat, projLng);
 }

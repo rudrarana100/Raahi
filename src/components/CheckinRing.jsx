@@ -5,6 +5,7 @@ import { Clock, ShieldCheck } from 'lucide-react';
 export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire }) {
   const [secondsRemaining, setSecondsRemaining] = useState(totalSeconds);
 
+  // Sync state if totalSeconds changes from parent reset
   useEffect(() => {
     setSecondsRemaining(totalSeconds);
   }, [totalSeconds]);
@@ -16,7 +17,7 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
     }
 
     const timer = setInterval(() => {
-      setSecondsRemaining(prev => prev - 1);
+      setSecondsRemaining(prev => Math.max(0, prev - 1));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -72,8 +73,11 @@ export default function CheckinRing({ totalSeconds = 300, onCheckin, onExpire })
 
       {/* Reassuring Action Button */}
       <button
-        onClick={onCheckin}
-        className="mt-3 px-6 py-2.5 bg-vivid hover:bg-botanical text-forest rounded-[6px] font-semibold text-sm transition-all shadow-sm flex items-center space-x-2"
+        onClick={() => {
+          setSecondsRemaining(totalSeconds);
+          if (onCheckin) onCheckin();
+        }}
+        className="mt-3 px-6 py-2.5 bg-vivid hover:bg-botanical text-forest rounded-[6px] font-semibold text-sm transition-all shadow-sm flex items-center space-x-2 cursor-pointer"
       >
         <ShieldCheck className="w-4 h-4 text-forest stroke-[2.5]" />
         <span>I am safe</span>

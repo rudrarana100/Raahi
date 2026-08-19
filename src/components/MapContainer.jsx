@@ -27,6 +27,11 @@ export default function MapContainer({ startLocation, destination, currentLocati
       }).addTo(map);
 
       mapInstanceRef.current = map;
+
+      // Ensure Leaflet calculates dimensions correctly after mount
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
     }
 
     return () => {
@@ -77,7 +82,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
     });
 
     // Start Location Marker
-    if (startLocation && startLocation.lat && startLocation.lng) {
+    if (startLocation && typeof startLocation.lat === 'number' && typeof startLocation.lng === 'number') {
       const startMarker = L.marker([startLocation.lat, startLocation.lng], {
         icon: createCustomIcon('#0a2414', '#f3fbe9', 'A')
       }).addTo(map);
@@ -87,7 +92,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
     }
 
     // Destination Marker
-    if (destination && destination.lat && destination.lng) {
+    if (destination && typeof destination.lat === 'number' && typeof destination.lng === 'number') {
       const destMarker = L.marker([destination.lat, destination.lng], {
         icon: createCustomIcon('#17b267', '#ffffff', 'B')
       }).addTo(map);
@@ -109,7 +114,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
     }
 
     // Current Live Location Marker
-    if (currentLocation && currentLocation.lat && currentLocation.lng) {
+    if (currentLocation && typeof currentLocation.lat === 'number' && typeof currentLocation.lng === 'number') {
       const liveIcon = L.divIcon({
         className: 'custom-live-icon',
         html: `
@@ -167,7 +172,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
           {onSimulateMove && (
             <button
               onClick={onSimulateMove}
-              className="px-2.5 py-1 bg-parchment text-forest border border-forest/10 rounded-[6px] hover:bg-card font-medium transition-colors"
+              className="px-2.5 py-1 bg-parchment text-forest border border-forest/10 rounded-[6px] hover:bg-card font-medium transition-colors cursor-pointer"
             >
               Advance Step
             </button>
@@ -175,7 +180,7 @@ export default function MapContainer({ startLocation, destination, currentLocati
           {onSimulateDeviation && (
             <button
               onClick={onSimulateDeviation}
-              className="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-[6px] hover:bg-amber-100 font-medium transition-colors"
+              className="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-[6px] hover:bg-amber-100 font-medium transition-colors cursor-pointer"
             >
               Simulate 200m Deviation
             </button>

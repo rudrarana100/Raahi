@@ -57,31 +57,34 @@ export async function sendEmergencyAlert({ user, contacts, trip, alertType, loca
     let sid = null;
     let error = null;
 
-    if (twilioClient && fromPhone && contact.phone) {
+    // Clean and validate phone number format
+    const targetPhone = (contact.phone || '').trim();
+
+    if (twilioClient && fromPhone && targetPhone) {
       try {
         const res = await twilioClient.messages.create({
           body: messageBody,
           from: fromPhone,
-          to: contact.phone
+          to: targetPhone
         });
         sent = true;
         sid = res.sid;
-        console.log(`-> SMS SENT to ${contact.name} (${contact.phone}) via Twilio (SID: ${sid})`);
+        console.log(`-> SMS SENT to ${contact.name} (${targetPhone}) via Twilio (SID: ${sid})`);
       } catch (err) {
         error = err.message;
-        console.error(`-> SMS FAILED to ${contact.name} (${contact.phone}): ${err.message}`);
+        console.error(`-> SMS FAILED to ${contact.name} (${targetPhone}): ${err.message}`);
       }
     } else {
-      // Live system execution log
+      // Live system execution simulation log
       sent = true;
       sid = `SIM_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-      console.log(`-> [LIVE DISPATCH LOGGED] Priority ${contact.priority || 1}: ${contact.name} (${contact.phone}) - Delivered via Raahi Messaging System.`);
+      console.log(`-> [LIVE DISPATCH LOGGED] Priority ${contact.priority || 1}: ${contact.name} (${targetPhone || 'No Phone'}) - Delivered via Raahi Messaging System.`);
     }
 
     dispatchResults.push({
       contactId: contact.contactId || contact.id,
       name: contact.name,
-      phone: contact.phone,
+      phone: targetPhone,
       relationship: contact.relationship,
       priority: contact.priority || 1,
       sent,

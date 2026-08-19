@@ -21,7 +21,7 @@ app.get('/api/health', (req, res) => {
 // Route Risk Scoring via Gemini API
 app.post('/api/risk-score', async (req, res) => {
   try {
-    const { mode, startName, destinationName, expectedDurationMinutes, startedAt } = req.body;
+    const { mode, startName, destinationName, expectedDurationMinutes, startedAt } = req.body || {};
     const result = await evaluateRouteRisk({
       mode: mode || 'walk',
       startName,
@@ -39,7 +39,7 @@ app.post('/api/risk-score', async (req, res) => {
 // Voice Distress Analysis via Gemini API
 app.post('/api/voice-checkin', async (req, res) => {
   try {
-    const { transcript, tone } = req.body;
+    const { transcript, tone } = req.body || {};
     const result = await analyzeVoiceDistress({ transcript, tone });
     res.json(result);
   } catch (error) {
@@ -51,7 +51,7 @@ app.post('/api/voice-checkin', async (req, res) => {
 // Route Deviation Detection
 app.post('/api/deviation-check', (req, res) => {
   try {
-    const { currentLocation, polyline, consecutiveDeviations } = req.body;
+    const { currentLocation, polyline, consecutiveDeviations } = req.body || {};
     const result = evaluateDeviation({
       currentLocation,
       polyline,
@@ -68,7 +68,7 @@ app.post('/api/deviation-check', (req, res) => {
 // Emergency Alert Dispatch (Twilio SMS / Outbound)
 app.post('/api/send-alert', async (req, res) => {
   try {
-    const { user, contacts, trip, alertType, location } = req.body;
+    const { user, contacts, trip, alertType, location } = req.body || {};
     const result = await sendEmergencyAlert({
       user,
       contacts,
@@ -86,7 +86,7 @@ app.post('/api/send-alert', async (req, res) => {
 // Immediate SOS Endpoint
 app.post('/api/sos', async (req, res) => {
   try {
-    const { user, contacts, trip, location } = req.body;
+    const { user, contacts, trip, location } = req.body || {};
     const result = await sendEmergencyAlert({
       user,
       contacts,
@@ -104,7 +104,7 @@ app.post('/api/sos', async (req, res) => {
 // Missed Check-in Escalation
 app.post('/api/missed-checkin', async (req, res) => {
   try {
-    const { trip, user, contacts, location } = req.body;
+    const { trip, user, contacts, location } = req.body || {};
     const result = await sendEmergencyAlert({
       user,
       contacts,
